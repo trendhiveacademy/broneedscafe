@@ -131,7 +131,7 @@
             to { opacity: 1; }
         }
 
-        /* Hero video styling */
+        /* Hero video styling for full responsiveness */
         .hero-video-container {
             position: absolute;
             top: 0;
@@ -142,6 +142,7 @@
             z-index: -1; /* Send video to background */
         }
         .hero-video {
+            /* These properties ensure the video covers the container while maintaining aspect ratio */
             min-width: 100%;
             min-height: 100%;
             width: auto;
@@ -150,7 +151,12 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            object-fit: cover; /* Ensure video covers the area */
+            object-fit: cover; /* Ensures video covers the area, cropping as necessary */
+            /* Added for better compatibility across browsers */
+            -webkit-transform: translate(-50%, -50%);
+            -moz-transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            -o-transform: translate(-50%, -50%);
         }
 
         /* Custom form styling */
@@ -318,7 +324,7 @@
             <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-8 hero-title">BRONEED'S CAFE</h1>
             <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
                 <a href="#menu" class="btn-primary animate-bounce">Explore Menu</a>
-                <a href="#franchise" class="btn-primary animate-bounce">Take a Franchise</a>
+                <a href="#franchise" class="btn-primary">Take a Franchise</a>
             </div>
         </div>
     </section>
@@ -505,14 +511,14 @@
                     <h3 class="text-3xl font-semibold text-gray-800 mb-6">Contact Details</h3>
                     <p class="text-lg mb-3"><strong>Phone:</strong> <a href="tel:8603527725" class="text-blue-600 hover:underline">8603527725</a>, <a href="tel:8757508191" class="text-blue-600 hover:underline">8757508191</a></p>
                     <p class="text-lg mb-3"><strong>Email:</strong> <a href="mailto:BRONEEDSCAFE@GMAIL.COM" class="text-blue-600 hover:underline">BRONEEDSCAFE@GMAIL.COM</a></p>
-                    <p class="text-lg mb-3"><strong>Address:</strong> By Pass Road Near Shiv Mandir</p>
+                    <p class="text-lg mb-3"><strong>Address:</strong> [Your Cafe Address Here, e.g., 123 Cafe Lane, Patna, Bihar, India]</p>
                     <p class="text-sm text-gray-500 mt-4">Visit us during our operating hours for a delightful experience!</p>
                 </div>
                 <div class="card slide-in-right">
                     <h3 class="text-3xl font-semibold text-gray-800 mb-6">Find Us & Follow Us</h3>
                     <div class="mb-6">
                         <!-- Google Maps Embed -->
-                        <div class="relative w-full" style="padding-bottom: 75%;"> <!-- Maintains 4:3 aspect ratio -->
+                        <div class="relative w-full" style="padding-bottom: 75%;"> <!-- Maintains 4:3 aspect ratio for responsiveness -->
                             <iframe
                                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3622.7590501420846!2d85.00052269999999!3d24.7694492!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f32bcea057e985%3A0x75bcb0b47e0647e3!2sBro&#39;Needs%20cafe!5e0!3m2!1sen!2sin!4v1753289097016!5m2!1sen!2sin"
                                 class="absolute top-0 left-0 w-full h-full rounded-lg shadow-md"
@@ -538,7 +544,7 @@
     <footer class="footer-bg py-8 text-center">
         <div class="container">
             <p>&copy; 2025 BRONEED'S CAFE. All rights reserved.</p>
-            <p class="text-sm mt-2">Designed with passion by <a href="https://www.instagram.com/digi.hance/">@digi.hance</a></p>
+            <p class="text-sm mt-2">Designed with passion for great coffee.</p>
         </div>
     </footer>
 
