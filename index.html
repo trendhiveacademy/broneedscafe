@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRONEED'S CAFE</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Playfair Display for headings, Poppins for body -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F0F8FF; /* Alice Blue - very light blue background */
+            color: #333;
+            overflow-x: hidden; /* Prevent horizontal scroll due to animations */
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        .header-bg {
+            background-color: #2C3E50; /* Dark Navy Blue for header */
+        }
+        .btn-primary {
+            background-color: #4A90E2; /* Medium Blue for buttons */
+            color: white;
+            padding: 0.85rem 2rem;
+            border-radius: 0.75rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .btn-primary:hover {
+            background-color: #6FAEEB; /* Lighter Blue on hover */
+            transform: translateY(-2px);
+        }
+        .section-heading {
+            font-family: 'Playfair Display', serif;
+            color: #2C3E50; /* Dark Navy Blue for headings */
+            font-weight: 700;
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 0.75rem 0;
+            border-bottom: 1px dashed #D3D3D3; /* Light grey dashed line */
+        }
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        .menu-item-name {
+            font-weight: 500;
+            color: #4A4A4A;
+        }
+        .menu-item-price {
+            font-weight: 600;
+            color: #4A90E2; /* Medium Blue for prices */
+            font-family: 'Playfair Display', serif;
+        }
+        .footer-bg {
+            background-color: #2C3E50; /* Dark Navy Blue for footer */
+            color: #F0F8FF;
+        }
+
+        /* Animation classes */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-up.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .slide-in-left.animate {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .slide-in-right.animate {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .scale-in {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .scale-in.animate {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Hero section specific styles for subtle animation */
+        .hero-title {
+            animation: fadeInScale 1.5s ease-out forwards;
+            font-family: 'Playfair Display', serif; /* Ensure this font is applied */
+            font-weight: 900; /* Make it extra bold */
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.7); /* Add subtle shadow */
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Hero video styling */
+        .hero-video-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1; /* Send video to background */
+        }
+        .hero-video {
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            object-fit: cover; /* Ensure video covers the area */
+        }
+
+        /* Custom form styling */
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #A9D0F5; /* Light blue border */
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #4A90E2; /* Medium blue on focus */
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2); /* Blue shadow */
+        }
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            text-align: center;
+            position: relative;
+            animation: fadeInScale 0.3s ease-out;
+        }
+        .close-button {
+            color: #aaa;
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Hamburger menu styles */
+        .hamburger-menu {
+            display: none; /* Hidden by default */
+            cursor: pointer;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+            position: relative;
+            z-index: 60; /* Above nav links when open */
+        }
+        .hamburger-menu span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background-color: white;
+            border-radius: 2px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* For mobile view, hide the full nav and show hamburger */
+        @media (max-width: 767px) { /* Tailwind's 'md' breakpoint is 768px */
+            .hamburger-menu {
+                display: flex;
+            }
+            .nav-menu {
+                display: none; /* Hidden by default on mobile */
+                flex-direction: column;
+                width: 100%;
+                background-color: #2C3E50; /* Same as header background */
+                position: absolute;
+                top: 100%; /* Position below the header */
+                left: 0;
+                padding-bottom: 1rem;
+                box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+                border-radius: 0 0 0.75rem 0.75rem;
+                overflow: hidden; /* Hide overflow during height transition */
+                transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+                max-height: 0; /* Start collapsed */
+                opacity: 0;
+            }
+            .nav-menu.open {
+                display: flex; /* Show when open */
+                max-height: 300px; /* Adjust based on content height */
+                opacity: 1;
+            }
+            .nav-menu li {
+                width: 100%;
+                text-align: center;
+                padding: 0.75rem 0;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+            .nav-menu li:last-child {
+                border-bottom: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header class="header-bg py-4 shadow-lg fixed w-full z-50 top-0">
+        <div class="container flex justify-between items-center">
+            <!-- Logo -->
+            <div>
+                <img src="logo.jpg" alt="BRONEED'S CAFE Logo" class="h-16 rounded-full shadow-lg border-2 border-white">
+            </div>
+            
+            <!-- Hamburger Menu Icon (Mobile Only) -->
+            <div class="hamburger-menu md:hidden" id="hamburgerBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <!-- Navigation Menu (Desktop & Mobile) -->
+            <nav class="text-white text-lg font-medium md:block" id="mainNav">
+                <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-8 nav-menu">
+                    <li><a href="#home" class="hover:text-blue-200 transition duration-300">Home</a></li>
+                    <li><a href="#about" class="hover:text-blue-200 transition duration-300">Our Story</a></li>
+                    <li><a href="#menu" class="hover:text-blue-200 transition duration-300">Menu</a></li>
+                    <li><a href="#franchise" class="hover:text-blue-200 transition duration-300">Franchise</a></li>
+                    <li><a href="#contact" class="hover:text-blue-200 transition duration-300">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative h-screen flex items-center justify-center text-white text-center shadow-inner pt-20">
+        <!-- Background Video -->
+        <div class="hero-video-container">
+            <video autoplay loop muted playsinline class="hero-video">
+                <source src="bg.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <!-- Overlay for text readability -->
+        <div class="bg-black bg-opacity-60 p-6 sm:p-8 md:p-12 rounded-xl max-w-4xl mx-auto shadow-2xl relative z-10">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-8 hero-title">BRONEED'S CAFE</h1>
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
+                <a href="#menu" class="btn-primary animate-bounce">Explore Menu</a>
+                <a href="#franchise" class="btn-primary animate-bounce">Take a Franchise</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="py-20 bg-white">
+        <div class="container grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="fade-in-up flex justify-center">
+                <!-- Circular Logo -->
+                <img src="logo.jpg" alt="BRONEED'S CAFE Logo" class="rounded-full w-64 h-64 object-cover shadow-xl border-4 border-blue-200">
+            </div>
+            <div class="fade-in-up">
+                <h2 class="text-5xl section-heading mb-6">Our Story</h2>
+                <p class="text-lg leading-relaxed text-gray-700 mb-4">
+                    At BRONEED'S CAFE, we believe in crafting more than just beverages; we create experiences. Founded with a passion for exceptional coffee and delicious food, our cafe is a cozy haven where friends gather, ideas brew, and moments are cherished.
+                </p>
+                <p class="text-lg leading-relaxed text-gray-700">
+                    From the rich aroma of our freshly brewed coffee to the comforting warmth of our Handi Maggie and the delightful burst of flavor from our Momos, every item on our menu is prepared with love and the finest ingredients. Come, be a part of our story!
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu" class="py-20 bg-gradient-to-br from-blue-50 to-blue-100">
+        <div class="container">
+            <h2 class="text-5xl section-heading text-center mb-12 fade-in-up">Our Delicious Menu</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- Maggie Section -->
+                <div class="card fade-in-up delay-100">
+                    <h3 class="text-3xl font-semibold text-gray-800 mb-6 text-center">Maggie</h3>
+                    <div class="space-y-4">
+                        <div class="menu-item">
+                            <span class="menu-item-name">VEG MAGGIE</span>
+                            <span class="menu-item-price">₹49</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="menu-item-name">HANDI CHEESE MAGGIE</span>
+                            <span class="menu-item-price">₹79</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="menu-item-name">HANDI PANEER MAGGIE</span>
+                            <span class="menu-item-price">₹89</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="menu-item-name">SPECIAL HANDI MAGGIE</span>
+                            <span class="menu-item-price">₹99</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Momos Section -->
+                <div class="card fade-in-up delay-200">
+                    <h3 class="text-3xl font-semibold text-gray-800 mb-6 text-center">Momos</h3>
+                    <div class="space-y-4">
+                        <div class="menu-item">
+                            <span class="menu-item-name">STREAM MOMOS</span>
+                            <span class="menu-item-price">₹39</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="menu-item-name">FRY MOMOS</span>
+                            <span class="menu-item-price">₹59</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="menu-item-name">MASALA GRAVY MOMOS</span>
+                            <span class="menu-item-price">₹99</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="menu-item-name">AFGANI MOMOS CAFE</span>
+                            <span class="menu-item-price">₹99</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="menu-item-name">SCHEZWAN MOMOS</span>
+                            <span class="menu-item-price">₹99</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="menu-item-name">PERI PERI MOMOS</span>
+                            <span class="menu-item-price">₹99</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="menu-item-name">TANDORI MOMOS</span>
+                            <span class="menu-item-price">₹99</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other Food & Beverages Section -->
+                <div class="card fade-in-up delay-300">
+                    <h3 class="text-3xl font-semibold text-gray-800 mb-6 text-center">Other Delights & Beverages</h3>
+                    <div class="space-y-4">
+                        <div class="menu-item">
+                            <span class="menu-item-name">PANEER CHILLI</span>
+                            <span class="menu-item-price">₹99</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="menu-item-name">VEG MANCHURIAN</span>
+                            <span class="menu-item-price">₹69</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="menu-item-name">MINERAL WATER</span>
+                            <span class="menu-item-price">MRP PRICE</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="menu-item-name">COLD DRINKS</span>
+                            <span class="menu-item-price">MRP PRICE</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Franchise Section -->
+    <section id="franchise" class="py-20 bg-white">
+        <div class="container text-center">
+            <h2 class="text-5xl section-heading mb-8 fade-in-up">Own a BRONEED'S CAFE Franchise!</h2>
+            <p class="text-lg mb-10 max-w-3xl mx-auto text-gray-700 fade-in-up delay-100">
+                Are you passionate about coffee and community? Join the BRONEED'S CAFE family and bring our unique experience to your city. We offer comprehensive support, a proven business model, and a beloved brand.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="card slide-in-left">
+                    <h3 class="text-3xl font-semibold text-gray-800 mb-6">Why Franchise with Us?</h3>
+                    <ul class="text-left text-lg space-y-3 text-gray-700">
+                        <li class="flex items-start"><span class="mr-2 text-green-600">&#10003;</span> Proven Business Model</li>
+                        <li class="flex items-start"><span class="mr-2 text-green-600">&#10003;</span> Comprehensive Training & Support</li>
+                        <li class="flex items-start"><span class="mr-2 text-green-600">&#10003;</span> Strong Brand Recognition</li>
+                        <li class="flex items-start"><span class="mr-2 text-green-600">&#10003;</span> Marketing Assistance</li>
+                        <li class="flex items-start"><span class="mr-2 text-green-600">&#10003;</span> Quality Products & Supply Chain</li>
+                    </ul>
+                </div>
+                <div class="card slide-in-right">
+                    <h3 class="text-3xl font-semibold text-gray-800 mb-6">Franchise Inquiry</h3>
+                    <p class="text-xl font-bold text-green-700 mb-4">Ready to take the next step?</p>
+                    <p class="text-3xl font-extrabold text-green-800 mb-6 scale-in">Call us at:</p>
+                    <p class="text-4xl font-extrabold text-green-800 mb-6 scale-in">8603527725</p>
+                    <p class="text-4xl font-extrabold text-green-800 mb-6 scale-in">8757508191</p>
+                    <p class="text-sm text-gray-600 mt-2">Our dedicated franchise team will be happy to assist you with all your questions.</p>
+                </div>
+            </div>
+
+            <div class="card mt-12 fade-in-up">
+                <h3 class="text-3xl font-semibold text-gray-800 mb-6">Send Us an Inquiry</h3>
+                <form id="franchiseForm" class="text-left space-y-6">
+                    <div>
+                        <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Your Name:</label>
+                        <input type="text" id="name" name="name" class="form-input" placeholder="John Doe" required>
+                    </div>
+                    <div>
+                        <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Your Email:</label>
+                        <input type="email" id="email" name="email" class="form-input" placeholder="john.doe@example.com" required>
+                    </div>
+                    <div>
+                        <label for="phone" class="block text-gray-700 text-sm font-bold mb-2">Phone Number:</label>
+                        <input type="tel" id="phone" name="phone" class="form-input" placeholder="+91 9876543210" required>
+                    </div>
+                    <div>
+                        <label for="city" class="block text-gray-700 text-sm font-bold mb-2">Proposed City/Location:</label>
+                        <input type="text" id="city" name="city" class="form-input" placeholder="Patna, Bihar" required>
+                    </div>
+                    <div>
+                        <label for="message" class="block text-gray-700 text-sm font-bold mb-2">Your Message:</label>
+                        <textarea id="message" name="message" class="form-input form-textarea" placeholder="Tell us about your interest in a BRONEED'S CAFE franchise..."></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary w-full md:w-auto">Submit Inquiry</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-gray-100">
+        <div class="container text-center">
+            <h2 class="text-5xl section-heading mb-8 fade-in-up">Get in Touch</h2>
+            <p class="text-lg mb-10 max-w-2xl mx-auto text-gray-700 fade-in-up delay-100">
+                Have questions, suggestions, or want to place an order? Reach out to us! We'd love to hear from you.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="card slide-in-left">
+                    <h3 class="text-3xl font-semibold text-gray-800 mb-6">Contact Details</h3>
+                    <p class="text-lg mb-3"><strong>Phone:</strong> <a href="tel:8603527725" class="text-blue-600 hover:underline">8603527725</a>, <a href="tel:8757508191" class="text-blue-600 hover:underline">8757508191</a></p>
+                    <p class="text-lg mb-3"><strong>Email:</strong> <a href="mailto:BRONEEDSCAFE@GMAIL.COM" class="text-blue-600 hover:underline">BRONEEDSCAFE@GMAIL.COM</a></p>
+                    <p class="text-lg mb-3"><strong>Address:</strong> By Pass Road Near Shiv Mandir</p>
+                    <p class="text-sm text-gray-500 mt-4">Visit us during our operating hours for a delightful experience!</p>
+                </div>
+                <div class="card slide-in-right">
+                    <h3 class="text-3xl font-semibold text-gray-800 mb-6">Find Us & Follow Us</h3>
+                    <div class="mb-6">
+                        <!-- Google Maps Embed -->
+                        <div class="relative w-full" style="padding-bottom: 75%;"> <!-- Maintains 4:3 aspect ratio -->
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3622.7590501420846!2d85.00052269999999!3d24.7694492!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f32bcea057e985%3A0x75bcb0b47e0647e3!2sBro&#39;Needs%20cafe!5e0!3m2!1sen!2sin!4v1753289097016!5m2!1sen!2sin"
+                                class="absolute top-0 left-0 w-full h-full rounded-lg shadow-md"
+                                style="border:0;"
+                                allowfullscreen=""
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"
+                            ></iframe>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2">Find us easily on the map!</p>
+                    </div>
+                    <a href="https://www.instagram.com/bro_needs_cafe/" target="_blank" class="btn-primary inline-flex items-center text-lg">
+                        <!-- Instagram Logo Image -->
+                        <img src="ig.png" alt="Instagram Icon" class="w-7 h-7 mr-3 rounded-full">
+                        Follow us on Instagram
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="footer-bg py-8 text-center">
+        <div class="container">
+            <p>&copy; 2025 BRONEED'S CAFE. All rights reserved.</p>
+            <p class="text-sm mt-2">Designed with passion by <a href="https://www.instagram.com/digi.hance/">@digi.hance</a></p>
+        </div>
+    </footer>
+
+    <!-- Modal for Inquiry Submission Success -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closeModalBtn">&times;</span>
+            <h3 class="text-3xl font-bold text-blue-600 mb-4">Inquiry Submitted!</h3>
+            <p class="text-lg text-gray-700 mb-6">Thank you for your interest in a BRONEED'S CAFE franchise. We will get back to you shortly!</p>
+            <button class="btn-primary" id="modalOkBtn">OK</button>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                const headerOffset = document.querySelector('header').offsetHeight; // Get header height
+                const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+                const offsetPosition = elementPosition - headerOffset - 20; // Add some extra padding
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+                // Close the mobile menu if a link is clicked
+                const navMenu = document.getElementById('mainNav').querySelector('ul');
+                if (navMenu.classList.contains('open')) {
+                    navMenu.classList.remove('open');
+                }
+            });
+        });
+
+        // Intersection Observer for scroll animations
+        const animateElements = document.querySelectorAll('.fade-in-up, .slide-in-left, .slide-in-right, .scale-in');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                    // Optional: Unobserve after animation to prevent re-triggering
+                    // observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1, // Trigger when 10% of the element is visible
+            rootMargin: '0px 0px -50px 0px' // Adjust when element is 50px from bottom of viewport
+        });
+
+        animateElements.forEach(element => {
+            observer.observe(element);
+        });
+
+        // Add delay for sequential animations
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.fade-in-up.delay-100').forEach(el => {
+                el.style.transitionDelay = '0.1s';
+            });
+            document.querySelectorAll('.fade-in-up.delay-200').forEach(el => {
+                el.style.transitionDelay = '0.2s';
+            });
+            document.querySelectorAll('.fade-in-up.delay-300').forEach(el => {
+                el.style.transitionDelay = '0.3s';
+            });
+        });
+
+        // Franchise Inquiry Form Submission (Client-Side Simulation)
+        const franchiseForm = document.getElementById('franchiseForm');
+        const successModal = document.getElementById('successModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const modalOkBtn = document.getElementById('modalOkBtn');
+
+        franchiseForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent actual form submission
+
+            // In a real application, you would send this data to a server here.
+            // Example: fetch('/api/submit-franchise-inquiry', { method: 'POST', body: new FormData(this) });
+
+            // For demonstration, we'll just log the data and show a success message.
+            const formData = new FormData(this);
+            const data = {};
+            for (let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+            console.log('Franchise Inquiry Data Submitted (Client-side only):', data);
+
+            // Show the success modal
+            successModal.style.display = 'flex'; // Use flex to center content
+
+            // Clear the form
+            this.reset();
+        });
+
+        // Close modal functionality
+        closeModalBtn.addEventListener('click', function() {
+            successModal.style.display = 'none';
+        });
+
+        modalOkBtn.addEventListener('click', function() {
+            successModal.style.display = 'none';
+        });
+
+        // Close modal if user clicks outside of it
+        window.addEventListener('click', function(event) {
+            if (event.target == successModal) {
+                successModal.style.display = 'none';
+            }
+        });
+
+        // Mobile Navigation Toggle
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const mainNavUl = document.getElementById('mainNav').querySelector('ul');
+
+        hamburgerBtn.addEventListener('click', function() {
+            mainNavUl.classList.toggle('open');
+        });
+    </script>
+</body>
+</html>
